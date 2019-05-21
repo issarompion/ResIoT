@@ -122,16 +122,16 @@
           <v-layout v-if="edit">
             <v-layout row wrap justify-center>
                 <v-flex xs3>
-                  <v-checkbox v-model="order" label="Led 1" value=1></v-checkbox>
+                  <v-checkbox v-model="order" label="1" value=1></v-checkbox>
                 </v-flex>
                   <v-flex xs3>
-                  <v-checkbox v-model="order" label="Led 2" value=2></v-checkbox>
+                  <v-checkbox v-model="order" label="2" value=2></v-checkbox>
                   </v-flex>
                   <v-flex xs3>
-                  <v-checkbox v-model="order" label="Led 3" value=3></v-checkbox>
+                  <v-checkbox v-model="order" label="3" value=3></v-checkbox>
                   </v-flex>
                   <v-flex xs3>
-                  <v-checkbox v-model="order" label="Led 4" value=4></v-checkbox>
+                  <v-checkbox v-model="order" label="4" value=4></v-checkbox>
                   </v-flex>
               </v-layout>
             <v-flex xs6>
@@ -156,6 +156,7 @@
     </v-flex>
     <v-flex xs6>
       <v-snackbar v-model="snackbar" :timeout=1500>Le délai est trop petit<v-btn color="red" flat @click="snackbar = false">Quit</v-btn></v-snackbar>
+      <v-snackbar v-model="dispo_snack" :timeout=1500>Table non disponible<v-btn color="red" flat @click="snackbar = false">Quit</v-btn></v-snackbar>
     </v-flex>
     </v-layout>
   </v-container>
@@ -174,12 +175,14 @@ export default {
       startboolean: false,
       order: [],
       edit: false,
+      dispo: false,
       log: false,
       panel: "normal",
       invert: false,
       items: [500,1000,1500,2000],
       items_disconnect: ["Table", "User"],
       snackbar: false,
+      dispo_snack: false,
       table: {nb_table: '5', ip_table: '192.168.0.5'},
       tables: [
         {nb_table: '5', ip_table: '192.168.0.5'},
@@ -204,11 +207,21 @@ export default {
     connect: function (){
       //this.dialog_connection = false
       this.loading = true
-      axios({ method: "POST", url: "http://localhost:1234/login", data: this.table.nb_table})
+      axios({ method: "POST", url: "http://localhost:1234/login", data: this.table.nb_table}).catch(function (error) {
+        this.dispo_snack = true
+      }).then(function (response) {
+                this.dialog_connection = false,
+                this.connected = true
+      })
 
     },
     disconnect: function () {
       this.connected = false
+      this.startboolean = false
+      this.edit = false
+      this.panel = "normal"
+      this.invert = false
+      this.order = []
       axios({ method: "GET", url: "http://localhost:1234/logout"})
     },
     faster: function () {
@@ -337,9 +350,7 @@ export default {
     loading: function(){
       if (this.loading == true){
         setTimeout(() => (
-        this.loading = false,
-        this.dialog_connection = false,
-        this.connected = true
+        this.loading = false
         ), 500)
       }
     },
