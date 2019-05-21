@@ -73,48 +73,49 @@
       </v-layout>
     </v-card >
 
-    <v-layout justify-start class="ma-3">
-      <v-flex xs2>
-      <v-card>
-        <v-card-text>
-          <v-layout justify-space-around align-center column>
-            <v-btn v-on:click="start" color="success" :disabled="startboolean || !connected">Start</v-btn>
-            <v-btn v-on:click="stop" color="error" :disabled="!startboolean">Stop</v-btn>
+      <v-card v-if="connected" class="ma-3" xs12>
+        <v-card-text >
+          <v-layout justify-space-around align-center row>
+            <v-btn v-on:click="start" class='mr-3' block color="success" :disabled="startboolean">Start</v-btn>
+            <v-btn v-on:click="stop" block color="error" class="ml-3" :disabled="!startboolean">Stop</v-btn>
           </v-layout>
         </v-card-text>
       </v-card>
-      </v-flex>
-      <v-flex class="ml-3" xs10>
-      <v-card>
+      <v-card v-if="startboolean && connected" xs12 class="ma-3">
         <v-card-title>
-          <p>Vitesse : {{vitesse}}</p>
+          <h1>Vitesse : {{vitesse}}</h1>
         </v-card-title>
         <v-card-text>
           <v-layout justify-space-around>
-            <v-btn v-on:click="faster" :disabled="!connected">Faster</v-btn>
-            <v-btn v-on:click="slower" :disabled="!connected">Slower</v-btn>
+            <v-btn v-on:click="faster" :disabled="!startboolean">Slower</v-btn>
+            <v-btn v-on:click="slower" :disabled="!startboolean">Faster</v-btn>
             <v-spacer/>
            </v-layout>
         </v-card-text>
         <v-card-actions>
           <v-flex >
-            <v-select :items="items" :disabled="!connected" label="Vitesse" outline v-model="vitesse">{{vitesse}}</v-select>
+            <v-select :items="items" :disabled="!startboolean" label="Vitesse" outline v-model="vitesse">{{vitesse}}</v-select>
             </v-flex>
         </v-card-actions>
       </v-card>
-      </v-flex>
-    </v-layout>
 
 
-      <v-card xs12 class="ma-3">
+      <v-card xs12 class="ma-3" v-if="connected && startboolean">
         <v-card-title>
+          <v-layout column>
+            <v-layout row>
+          <h1>Ordre</h1>
+          <v-spacer/>
+          <h2 v-if="edit">{{order_fonction}}</h2>
+          <v-progress-circular :value="progress"></v-progress-circular>
+            </v-layout>
           <v-radio-group row v-model="panel">
             <v-radio :disabled="!connected" label="Normal" value="normal" color="primary"></v-radio>
             <v-radio label="Personnalisé" :disabled="!connected" value="perso" color="primary"></v-radio>
           </v-radio-group>
           <v-spacer/>
-          <p v-if="edit">Ordre : {{order_fonction}}</p>
-          <v-progress-circular :value="progress"></v-progress-circular>
+          
+          </v-layout>
         </v-card-title>
         <v-divider class="mx-3" inset></v-divider>
         <v-card-text>
@@ -253,7 +254,7 @@ export default {
     order_fonction () {
       let result = ""
       this.order.forEach(element => {
-        result += element.replace('"',"") + ", "
+        result += element.replace('"',"") + "   "
       });
       return result
     }
@@ -339,7 +340,7 @@ export default {
         this.loading = false,
         this.dialog_connection = false,
         this.connected = true
-        ), 2000)
+        ), 500)
       }
     },
     reset: function(){
