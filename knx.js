@@ -3,7 +3,7 @@ const knx = require('knx')
 var connection = new knx.Connection(
     {
     // ip address and port of the KNX router or interface
-    ipAddr: '192.168.1.5', ipPort: 3671, minimumDelay: 10,
+    ipAddr: '192.168.1.10', ipPort: 3671, minimumDelay: 10,
     // in case you need to specify the multicast interface (say if you have more than one)
     // define your event handlers here:
     handlers: {
