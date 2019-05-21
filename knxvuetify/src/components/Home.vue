@@ -208,10 +208,9 @@ export default {
       //this.dialog_connection = false
       this.loading = true
       axios({ method: "POST", url: "http://localhost:1234/login", data: this.table.nb_table}).catch(function (error) {
-        this.dispo_snack = true
+        console.log(response)
       }).then(function (response) {
-                this.dialog_connection = false,
-                this.connected = true
+        console.log(response)
       })
 
     },
@@ -350,7 +349,9 @@ export default {
     loading: function(){
       if (this.loading == true){
         setTimeout(() => (
-        this.loading = false
+        this.loading = false,
+        this.dialog_connection = false,
+        this.connected = true
         ), 500)
       }
     },
