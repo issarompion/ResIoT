@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "vue": "^2.6.6",
     "vue-moment": "^4.0.0",
     "vue-native-websocket": "^2.0.12",
